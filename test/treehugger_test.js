@@ -54,7 +54,7 @@ describe('TreeHugger', function(){
             });
         });
 
-        it.only('should provide a top level "write" that handles multiple args', function(){
+        it('should provide a top level "write" that handles multiple args', function(){
             var expected = function(){ return {}};
             var e = Env.config({
                 getEnvironment: expected
