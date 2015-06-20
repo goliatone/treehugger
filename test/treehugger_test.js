@@ -16,17 +16,17 @@ describe('TreeHugger', function(){
             assert.isObject(Env.DEFAULTS);
         });
 
-        it('should provide a "load" method', function(){
-            assert.isFunction(Env.load);
+        it('should provide a "write" method', function(){
+            assert.isFunction(Env.write);
         });
 
-        it('should provide a "save" method', function(){
-            assert.isFunction(Env.save);
+        it('should provide a "read" method', function(){
+            assert.isFunction(Env.read);
         });
     });
 
-    describe('load', function(){
-        it('should load ENV', function(done){
+    describe('write', function(){
+        it('should write ENV using NODE default namespace', function(done){
             var expected = {
                 NODE_USERNAME: 'goliatone',
                 NODE_PASSWORD: 'secret'
@@ -45,9 +45,42 @@ describe('TreeHugger', function(){
                 }
             });
 
-            e.load({data: data});
+            e.write(data);
 
-            e.on('loaded', function(env){
+            e.on('write', function(env){
+                assert.equal(env.NODE_USERNAME, expected.NODE_USERNAME);
+                assert.equal(env.NODE_PASSWORD, expected.NODE_PASSWORD);
+                done();
+            });
+        });
+
+        it.only('should provide a top level "write" that handles multiple args', function(){
+            var expected = function(){ return {}};
+            var e = Env.config({
+                getEnvironment: expected
+            }).write({});
+
+            assert.equal(e.getEnvironment, expected);
+        });
+
+        it('should provide a top level "write"', function(done){
+            var expected = {
+                NODE_USERNAME: 'goliatone',
+                NODE_PASSWORD: 'secret'
+            };
+
+            var ENV = {};
+
+            var data = {
+                username: 'goliatone',
+                password: 'secret'
+            };
+
+            Env.config({
+                getEnvironment: function(){
+                    return ENV;
+                }
+            }).write(data).on('write', function(env){
                 assert.equal(env.NODE_USERNAME, expected.NODE_USERNAME);
                 assert.equal(env.NODE_PASSWORD, expected.NODE_PASSWORD);
                 done();
@@ -56,8 +89,8 @@ describe('TreeHugger', function(){
     });
 
 
-    describe('save', function(){
-        it('should save ENV', function(done){
+    describe('read', function(){
+        it('should read ENV', function(done){
             var expected = {
                 username: 'goliatone',
                 password: 'secret'
@@ -79,9 +112,9 @@ describe('TreeHugger', function(){
                 }
             });
 
-            e.save();
+            e.read();
 
-            e.on('saved', function(env){
+            e.on('read', function(env){
                 assert.equal(env.username, expected.username);
                 assert.equal(env.password, expected.password);
                 done();
