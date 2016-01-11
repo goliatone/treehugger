@@ -10,6 +10,10 @@ var treehugger = require('treehugger');
 treehugger.awesome(); // "awesome"
 ```
 
+## TODO
+- [x] Enable empty namespaces
+- [x] Enable appname, currently we are missusing it
+
 ## Documentation
 _(Coming soon)_
 
